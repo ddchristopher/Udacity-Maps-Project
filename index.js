@@ -229,13 +229,10 @@ function initMap() {
 
 	const service = new google.maps.places.PlacesService(map);
 
-	//For each place entry in the AppViewModel, create a promise that will call the Google Maps API
-	const places = [];
-	let queries = 0;
-	for (let entry of AppViewModel.places) {
-		//Stagger the requests to avoid
-		queries++;
-		const getPlace = new Promise((resolve, reject) => {
+
+	//Makes a promise that will call the Google Maps API
+	function makePromise(entry, queries){
+		return new Promise((resolve, reject) => {
 			setTimeout(function(){
 				service.getDetails({
 					placeId: entry.placeId
@@ -248,12 +245,39 @@ function initMap() {
 					}
 				});
 			}, queries*250);
-
 		});
-
-		places.push(getPlace);
 	}
 
+
+	//For each place entry in the AppViewModel, create a promise that will call the Google Maps API
+	const places = [];
+	let queries = 0;
+	for (let entry of AppViewModel.places) {
+		//Stagger the requests to avoid
+		queries++;
+		let placePromise = makePromise(entry, queries);
+		places.push(placePromise);
+	}
+
+	//Function to add marker positions to the model
+	function addPositions (marker) {
+		AppViewModel.places.forEach(place => {
+			if (place.placeId === marker.placeId) {
+				place.position = marker.position;
+			}
+		});
+	}
+
+	//Function to add listeners to markers to show info when clicked
+	function applyMarker(marker) {
+		marker.addListener('click', function() {
+			AppViewModel.showMarker("","",this);
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function(){
+				marker.setAnimation(null);
+			}, 1400);
+		});
+	}
 
 	//Wait for all promises to resolve
 	//Create markers, add event listeners, and store them in the AppViewModel along with their corresponding locations
@@ -275,18 +299,8 @@ function initMap() {
 				photos: photos,
 				category: place.category,
 			});
-			AppViewModel.places.forEach(place => {
-				if (place.placeId === marker.placeId) {
-					place.position = marker.position;
-				}
-			});
-			marker.addListener('click', function() {
-				AppViewModel.showMarker("","",this);
-				marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function(){
-					marker.setAnimation(null);
-				}, 1400);
-			});
+			addPositions(marker);
+			applyMarker(marker);
 			AppViewModel.markers.push(marker);
 
 		}
