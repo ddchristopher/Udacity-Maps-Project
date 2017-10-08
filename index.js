@@ -321,12 +321,6 @@ function initMap() {
 		});
 }
 
-
-// Because we are using webpack, must add initMap to global scope so
-// UglifyJS doesn't shake it as an unused function before the Google Maps
-// API can call it
-window.initMap = initMap;
-
 //Watch window for resize and retract sidebar
 $window.resize(function(){
 	const screenSize =  $(window).width();
