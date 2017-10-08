@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+    <title>My Venice Trip</title>
+</head>
+<body>
+    <div class="container-fluid">
+
+        <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-info">
+            <div class="navbar-toggler top-bar-small">
+                <ul class="nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <span id="location-list-toggler" class="nav-link navbar-toggler-icon location-menu" data-bind="click: slideLocationBar"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#" data-bind="click: resetList">All</a>
+                            <!-- ko foreach: lists -->
+                            <a class="dropdown-item" href="#" data-bind="text: name, click: $parent.setList"></a>
+                            <!-- /ko -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <a href="#" class="navbar-brand" data-bind="click: resetList">Venice</a>
+
+
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav mr-auto mt-2 mt-lg-0 top-bar">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#" data-bind="click: resetList">All</a>
+                            <!-- ko foreach: lists -->
+                            <a class="dropdown-item" href="#" data-bind="text: name, click: $parent.setList"></a>
+                            <!-- /ko -->
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+
+
+        <div class="row">
+            <div class="col-md-3 col-xl-2 col-5 border-info" id="location-list" data-bind="style: {transform: locationBarPosition}">
+                <div class="card locations border-info">
+                    <ul class="list-group list-group-flush" data-bind="foreach: list">
+                        <li class="list-group-item location-item" data-bind="text: name, attr: {'placeId': placeId}, click: $parent.showMarker"></li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-md-9 col-xl-10 col-12">
+                <div class="card border-info">
+                    <div class="map-container">
+                        <div data-bind="css: {loader: loading() === true}"></div>
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-3 col-xl-2 col-6">
+                    <div class="card border-info loc-img-card" data-bind="foreach: photos">
+                        <div class="card-img">
+                            <img class="loc-img" data-bind="attr: {src: url}">
+                        </div>
+                    </div>
+            </div>
+
+            <div class="col-md-9 col-xl-10 col-6">
+                <div class="card border-info">
+                    <div class="card-body">
+                        <h5 class="card-title" data-bind="text: placeName">
+                        </h5>
+                        <p class="card-text" data-bind="text: placeAddress">
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted" data-bind="text: fsCheckIns"></small>
+                        </p>
+                    </div>
+                </div>
+                <!-- ko foreach: tips -->
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text" data-bind="text: tip">
+                        </p>
+                        <a class="card-text" target="_blank" data-bind="attr: {href: $parent.fsLink}">
+                            <small data-bind="text: author"></small>
+                        </a>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvdDhxYIXUDtz-u1nn709zuSMzyAxbr6g&libraries=places,geometry&v=3&callback=initMap">
+    </script>
+</body>
+</html>
