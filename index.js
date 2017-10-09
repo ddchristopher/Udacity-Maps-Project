@@ -1,96 +1,9 @@
 
 function AppModel() {
-	var self = this;
-	//Lists used to filter markers in dropdown menu
-	self.lists = [
-		{name: 'Food'},
-		{name: 'Shops'},
-		{name: 'Sights'}
-	];
-	//Places used to set markers
-	self.places = [
-		{
-			name: 'Tonolo Pastry',
-			placeId: 'ChIJycadUM-xfkcRq6u1DF0Z7LY',
-			category: 'Food'
-		},
-		{
-			name: 'Cantina Arnaldi',
-			placeId: 'ChIJkUDtoMixfkcRTMB1Ku0PwuM',
-			category: 'Food'
-		},
-		{
-			name: 'La Lanterna Da Gas',
-			placeId: 'ChIJ822iqMixfkcRiHvAzo05OlI',
-			category: 'Food'
-		},
-		{
-			name: 'Margaret Duchamp',
-			placeId: 'ChIJi2q21c6xfkcRoYhehLLsEy0',
-			category: 'Food'
-		},
-		{
-			name: 'Dal Moro\'s Fresh Pasta To Go',
-			placeId: 'ChIJd7fbStixfkcR42J6gNhq7WQ',
-			category: 'Food'
-		},
-		{
-			name: 'Bistrot De Venise',
-			placeId: 'ChIJAYrmAtqxfkcRcn-5TVq_z34',
-			category: 'Food'
-		},
-		{
-			name: 'Rialto Bridge',
-			placeId: 'ChIJOzqj-sexfkcRicyOKaERIHM',
-			category: 'Sights'
-		},
-		{
-			name: 'Doge\'s Palace',
-			placeId: 'ChIJiYRBbtexfkcR0XTK3ATSCbg',
-			category: 'Sights'
-		},
-		{
-			name: 'Saint Mark\'s Basilica',
-			placeId: 'ChIJv2xSZNexfkcRBaKsgyfVEgo',
-			category: 'Sights'
-		},
-		{
-			name:'Ponte dell\'Accademia',
-			placeId: 'ChIJocor_dGxfkcR1k5rTS6NR8I',
-			category: 'Sights'
-		},
-		{
-			name: 'Peggy Guggenheim Collection',
-			placeId: 'ChIJxf6409OxfkcR7UmjymSPxuM',
-			category: 'Sights'
-		},
-		{
-			name: 'Acqua Alta Library',
-			placeId: 'ChIJhfS6ltixfkcRhLlpd5wP-oo',
-			category: 'Shops'
-		},
-		{
-			name: 'I Tre Mercanti Srl',
-			placeId: 'ChIJq6mHsNmxfkcRV64qpCP2Qzw',
-			category: 'Shops'
-		},
-		{
-			name: 'Atelier Marega',
-			placeId: 'ChIJ04SnicWxfkcRxywHtiytmYU',
-			category: 'Shops'
-		},
-		{
-			name: 'The Merchant Of Venice',
-			placeId: 'ChIJ6WhJ69CxfkcR7Ye0C7m1Jto',
-			category: 'Shops'
-		},
-		{
-			name: 'VizioVirtù Cioccolateria',
-			placeId: 'ChIJPWQtJtuxfkcRbiWXiNzcT7A',
-			category: 'Shops'
-		}
-	];
+	const self = this;
 
+	self.lists = data.lists;
+	self.places = data.places;
 	//Display a loading indicator while the initMap function promises are resolving
 	self.loading = ko.observable(true);
 
@@ -169,7 +82,7 @@ function AppModel() {
 
 	// Methods to fetch FourSquare Data, format it, and store it in the Model
 	self.getFStips = function(FSid) {
-		fetch(self.FStips(FSid))
+		return fetch(self.FStips(FSid))
 			.then(response => response.json())
 			.then(data => {
 				self.tips.removeAll();
@@ -181,11 +94,12 @@ function AppModel() {
 					let tip = {tip: item.text, author: tipAuthor};
 					self.tips.push(tip);
 				}
-			});
+			})
+			.catch(error => alert('Unable to retrieve Foursquare tips: ' + error));
 	};
 
 	self.getFSData = function(place) {
-		fetch(self.FSInfo(place))
+		return fetch(self.FSInfo(place))
 			.then(response => response.json())
 			.then(data => {
 				let id = data.response.venues[0].id;
@@ -218,6 +132,10 @@ function AppModel() {
 let map;
 const $window = $(window);
 const AppViewModel = new AppModel();
+
+function mapsAPIError(){
+	alert('The map could not be loaded');
+}
 
 // Function to initialize the map within the map div
 // Used to set up markers and store location data
